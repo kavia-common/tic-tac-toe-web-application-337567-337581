@@ -2,23 +2,22 @@ import React, { useMemo, useState } from 'react';
 import './App.css';
 
 const BOARD_SIZE = 9;
+const LINES = [
+  // Rows
+  [0, 1, 2],
+  [3, 4, 5],
+  [6, 7, 8],
+  // Cols
+  [0, 3, 6],
+  [1, 4, 7],
+  [2, 5, 8],
+  // Diags
+  [0, 4, 8],
+  [2, 4, 6],
+];
 
 function getWinningLine(squares) {
-  const lines = [
-    // Rows
-    [0, 1, 2],
-    [3, 4, 5],
-    [6, 7, 8],
-    // Cols
-    [0, 3, 6],
-    [1, 4, 7],
-    [2, 5, 8],
-    // Diags
-    [0, 4, 8],
-    [2, 4, 6],
-  ];
-
-  for (const [a, b, c] of lines) {
+  for (const [a, b, c] of LINES) {
     const v = squares[a];
     if (v && v === squares[b] && v === squares[c]) return [a, b, c];
   }
@@ -32,14 +31,14 @@ function isBoardFull(squares) {
 // PUBLIC_INTERFACE
 function App() {
   /** Main Tic Tac Toe application (local 2-player). */
-  const [squares, setSquares] = useState(Array(BOARD_SIZE).fill(null));
+  const [squares, setSquares] = useState(() => Array(BOARD_SIZE).fill(null));
   const [xIsNext, setXIsNext] = useState(true);
 
   const winningLine = useMemo(() => getWinningLine(squares), [squares]);
   const winner = winningLine ? squares[winningLine[0]] : null;
   const isDraw = !winner && isBoardFull(squares);
 
-  const status = useMemo(() => {
+  const statusText = useMemo(() => {
     if (winner) return `${winner} wins!`;
     if (isDraw) return `It's a draw.`;
     return `Turn: ${xIsNext ? 'X' : 'O'}`;
@@ -98,7 +97,7 @@ function App() {
                 winner ? 'is-winner' : isDraw ? 'is-draw' : 'is-turn'
               }`}
             >
-              {status}
+              {statusText}
             </div>
           </div>
         </header>
